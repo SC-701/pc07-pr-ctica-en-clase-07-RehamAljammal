@@ -16,5 +16,10 @@ namespace Reglas
         {
             return _configuration.GetSection(llave).Value;
         }
+
+        public string ObtenerMetodo(string seccion, string nombre)
+        {
+            return _configuration.GetSection(seccion)[nombre];
+        }
     }
 }

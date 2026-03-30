@@ -4,3 +4,20 @@
 }
 
 <h1>LISTADO DE PRODUCTOS</h1>
+<div class="container">
+
+<div class="row">
+    @if (Model.productos != null)
+    @foreach(var producto in Model.productos)
+        {
+            <div class="card">
+                <p>@Html.DisplayFor(modelo => producto.Categoria) </p>
+                <p>@Html.DisplayFor(modelo => producto.SubCategoria) </p>
+
+            </div>
+
+
+        }
+
+    </div>
+</div>
