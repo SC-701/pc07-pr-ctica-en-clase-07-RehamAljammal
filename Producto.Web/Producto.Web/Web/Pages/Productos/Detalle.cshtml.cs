@@ -1,28 +1,28 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Abstracciones.Interfaces.Reglas;
-using System.Net;
 using Abstracciones.Modelo;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
 using System.Text.Json;
 
 namespace Web.Pages.Productos
 {
-    public class IndexModel : PageModel
+    public class DetalleModel : PageModel
     {
         private IConfiguracion _configuracion;
-        public IList<ProductoResponse> productos { get; set; } = default!;
 
-        public IndexModel(IConfiguracion configuracion)
+        public ProductoResponse producto { get; set; } = default!;
+
+        public DetalleModel(IConfiguracion configuracion)
         {
             _configuracion = configuracion;
         }
 
-        public async Task OnGet()
+        public async Task OnGet(Guid? id)
         {
-            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerProductos");
+            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerProducto");
 
             var cliente = new HttpClient();
-            var solicitud = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, id));
 
             var respuesta = await cliente.SendAsync(solicitud);
             respuesta.EnsureSuccessStatusCode();
@@ -32,7 +32,7 @@ namespace Web.Pages.Productos
                 var resultado = await respuesta.Content.ReadAsStringAsync();
                 var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-                productos = JsonSerializer.Deserialize<List<ProductoResponse>>(resultado, opciones);
+                producto = JsonSerializer.Deserialize<ProductoResponse>(resultado, opciones);
             }
         }
     }
